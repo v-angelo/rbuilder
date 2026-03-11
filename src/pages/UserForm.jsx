@@ -4,7 +4,7 @@ import Preview from '../components/Preview';
 function UserForm() {
   return (
     <main className='flex flex-col md:flex-row max-w-6xl mx-auto mt-10'>
-      <section className='md:w-1/2'>
+      <section className='md:w-1/2 p-3'>
         <UserInputs />
       </section>
 

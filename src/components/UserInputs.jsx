@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -13,11 +13,36 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+import jobTypes from '../assets/jobRole.json';
+
 const steps = ['Basic Informations', 'Contact Details', 'Education Details', 'Review & Submit'];
 
 function UserInputs() {
 
     const [activeStep, setActiveStep] = React.useState(0);
+    const [resumeData, setResumeData] = useState({
+        fullName: "",
+        location: "",
+        job: "",
+        email: "",
+        phone: "",
+        linkdin: "",
+        github: "",
+        degree: "",
+        university: "",
+        passOut: "",
+        skills: [],
+        summary: ""
+    });
+
+    console.log(resumeData);
+
+    const handleChange = (e) => {
+        setResumeData({
+            ...resumeData,
+            [e.target.name]: e.target.value
+        });
+    }
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -33,17 +58,21 @@ function UserInputs() {
                 <section>
                     <h3 className='px-3 text-2xl font-semibold'>Personal Details</h3>
                     <div className="p-3 flex flex-col">
-                        <TextField id="standard-name" label="Full Name" variant="standard" />
-                        <TextField id="standard-loc" label="Location" variant="standard" />
+                        <TextField name='fullName' onChange={handleChange} id="standard-name" label="Full Name" variant="standard" />
+                        <TextField name='location' onChange={handleChange} id="standard-loc" label="Location" variant="standard" />
 
                         <FormControl variant="standard">
                             <InputLabel id="demo-simple-select-standard-label">Choose Job Title</InputLabel>
-                            <Select
+                            <Select name='job' onChange={handleChange} defaultValue={''}
                                 labelId="demo-simple-select-standard-label"
                                 id="demo-simple-select-standard"
-                                label="Age"
+                                label="Job"
                             >
-                                <MenuItem value={10}>Ten</MenuItem>
+                                {
+                                    jobTypes.jobRoles.map(role => (
+                                        <MenuItem key={role} value={role}>{role}</MenuItem>
+                                    ))
+                                }
                             </Select>
                         </FormControl>
                     </div>
@@ -89,7 +118,7 @@ function UserInputs() {
             <Stepper className='overflow-x-auto' activeStep={activeStep}>
                 {steps.map((label, index) => {
                     const stepProps = {};
-                    const labelProps = {};           
+                    const labelProps = {};
                     return (
                         <Step key={label} {...stepProps}>
                             <StepLabel {...labelProps}>{label}</StepLabel>
