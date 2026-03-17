@@ -11,12 +11,12 @@ function Preview({ resumeData }) {
       <h4 className='my-2'>GitHub: <a href=''>{resumeData?.github}</a></h4>
       <h4 className='mt-2 mb-5'>Location: {resumeData?.location}</h4>
 
-      <Divider className='bg-slate-300' />
+      <Divider className='' />
 
       <h3 className='text-2xl font-medium my-3'>Professional Summary</h3>
       <p className='mb-5'>{resumeData?.summary}</p>
 
-      <Divider className='bg-slate-300' />
+      <Divider className='' />
 
       <h3 className='text-2xl font-medium my-3'>Technical Skills</h3>
       {
@@ -25,7 +25,7 @@ function Preview({ resumeData }) {
         ))
       }
 
-      <Divider className='bg-slate-300' />
+      <Divider className='' />
 
       <h3 className='text-2xl font-medium my-3'>Education</h3>
       <h4 className='my-2'>Bachelor's degree in <span className='font-medium'>{resumeData?.degree}</span></h4>
