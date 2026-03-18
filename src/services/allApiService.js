@@ -19,3 +19,8 @@ export const downloadResumeAPI = async (resumeData) => {
 export const getDownloadResumeAPI = async () => {
    return await apiService("GET", "/downloads", {});
 }
+
+// delete resume download api called by Downloads component when delete when button is clicked
+export const deleteDownloadResumeAPI = async (resumeId) => {
+   return await apiService("DELETE", `/downloads/${resumeId}`, {});
+}

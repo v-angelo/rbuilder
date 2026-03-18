@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal';
 import { MdEditDocument } from 'react-icons/md';
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { FaXmark } from 'react-icons/fa6';
+import jobTypes from '../assets/jobRole.json';
 
 const style = {
   position: 'absolute',
@@ -21,11 +22,42 @@ const style = {
   p: 4,
 };
 
-function Edit() {
+function Edit({ resumeData, setResumeData }) {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const skillRef = useRef();
+
+  // console.log(resumeData);
+
+  const handleChange = (e) => {
+    setResumeData({
+      ...resumeData,
+      [e.target.name]: e.target.value
+    });
+  }
+
+  const removeSkill = (skill) => {
+    // remove skill from resumeData.skills
+    setResumeData({ ...resumeData, skills: resumeData?.skills?.filter(item => item != skill) });
+  }
+
+  const addSkill = (skill) => {
+    if (skill) {
+      if (resumeData?.skills?.map(item => item.toLowerCase())?.includes(skill.toLowerCase())) {
+        alert("Given skill is already available. Add another skill!");
+      }
+      else {
+        setResumeData({ ...resumeData, skills: [...resumeData?.skills, skill] });
+      }
+
+      skillRef.current.value = "";
+    }
+    else {
+      alert("Input Valid Skill!")
+    }
+  }
 
   return (
     <section>
@@ -45,17 +77,21 @@ function Edit() {
             <section>
               <h3 className='px-3 text-2xl font-semibold'>Personal Details</h3>
               <div className="p-3 flex flex-col">
-                <TextField id="standard-name" label="Full Name" variant="standard" />
-                <TextField id="standard-loc" label="Location" variant="standard" />
+                <TextField value={resumeData?.fullName} name='fullName' onChange={handleChange} id="standard-name" label="Full Name" variant="standard" />
+                <TextField value={resumeData?.location} name='location' onChange={handleChange} id="standard-loc" label="Location" variant="standard" />
 
                 <FormControl variant="standard">
                   <InputLabel id="demo-simple-select-standard-label">Choose Job Title</InputLabel>
-                  <Select
+                  <Select name='job' onChange={handleChange} defaultValue={''}
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
-                    label="Age"
+                    label="Job"
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
+                    {
+                      jobTypes.jobRoles.map(role => (
+                        <MenuItem key={role} value={role}>{role}</MenuItem>
+                      ))
+                    }
                   </Select>
                 </FormControl>
               </div>
@@ -65,10 +101,10 @@ function Edit() {
             <section>
               <h3 className='px-3 text-2xl font-semibold'>Contact Details</h3>
               <div className="p-3 flex flex-col">
-                <TextField id="standard-email" label="Email" variant="standard" />
-                <TextField id="standard-phone" label="Phone" variant="standard" />
-                <TextField id="standard-linkdin" label="Linkdin" variant="standard" />
-                <TextField id="standard-github" label="GitHub" variant="standard" />
+                <TextField value={resumeData?.email} name='email' onChange={handleChange} id="standard-email" label="Email" variant="standard" />
+                <TextField value={resumeData?.phone} name='phone' onChange={handleChange} id="standard-phone" label="Phone" variant="standard" />
+                <TextField value={resumeData?.linkdin} name='linkdin' onChange={handleChange} id="standard-linkdin" label="Linkdin" variant="standard" />
+                <TextField value={resumeData?.github} name='github' onChange={handleChange} id="standard-github" label="GitHub" variant="standard" />
               </div>
             </section>
 
@@ -76,9 +112,9 @@ function Edit() {
             <section>
               <h3 className='px-3 text-2xl font-semibold'>Educational Details</h3>
               <div className="p-3 flex flex-col">
-                <TextField id="standard-degree" label="Bachelor's Degree" variant="standard" />
-                <TextField id="standard-university" label="University/College Name" variant="standard" />
-                <TextField id="standard-year" label="Year of Graduation" variant="standard" />
+                <TextField value={resumeData?.degree} name='degree' onChange={handleChange} id="standard-degree" label="Bachelor's Degree" variant="standard" />
+                <TextField value={resumeData?.university} name='university' onChange={handleChange} id="standard-university" label="University/College Name" variant="standard" />
+                <TextField value={resumeData?.passOut} name='passOut' onChange={handleChange} id="standard-year" label="Year of Graduation" variant="standard" />
               </div>
             </section>
 
@@ -86,22 +122,29 @@ function Edit() {
             <section>
               <h3 className='px-3 text-2xl font-semibold'>Skills</h3>
               <div className='flex p-3'>
-                <input type="text" placeholder='Add Skill' />
-                <Button variant='text'>Add</Button>
+                <input ref={skillRef} type="text" placeholder='Add Skill' />
+                <Button onClick={() => { addSkill(skillRef.current.value) }} variant='text'>Add</Button>
               </div>
               <h3 className='px-3 text-2xl font-semibold'>Added Skills:</h3>
               {/* display all existing skills */}
               <div className="p-3 flex flex-wrap justify-between items-center">
-                <Button variant='contained'>
-                  Add <FaXmark />
-                </Button>
+                {
+                  resumeData?.skills?.map(skill => (
+                    <div key={skill} className='my-1'>
+                      <Button onClick={() => removeSkill(skill)} variant='contained'>
+                        {skill}<FaXmark />
+                      </Button>
+                    </div>
+                  ))
+                }
+
               </div>
             </section>
 
             {/* summary */}
             <section>
               <h3 className='px-3 text-2xl font-semibold'>Summary</h3>
-              <TextField></TextField>
+              <TextField value={resumeData?.summary} name='summary' onChange={handleChange} ></TextField>
             </section>
 
             {/* update */}

@@ -29,34 +29,42 @@ function viewResume() {
   const downloadResume = async () => {
     const previewTag = previewRef.current;
     const canvas = await html2canvas(previewTag);
-    // const resumeImg = canvas.toDataURL('image/png');
+    const imgUrl = canvas.toDataURL('image/jpeg', 0.7);
+    console.log(imgUrl);
 
-    canvas.toBlob(blob => {
-      const shortURL = URL.createObjectURL(blob);
-      generatePDF(shortURL);
-    });    
+    generatePDF(imgUrl);
+
+    // canvas.toBlob(blob => {
+    //   const shortURL = URL.createObjectURL(blob);
+    //   generatePDF(shortURL);
+    // });
+    
   }
 
   const generatePDF = async (resumeImg) => {
     // get time of download, id imagae of resume into an object
     const today = new Date();
-    const timeStamp = `${today.toLocaleTimeString()}, ${today.toLocaleTimeString()}`;
-    
+    const timeStamp = `${today.toLocaleDateString()}, ${today.toLocaleTimeString()}`;
+
     const pdf = new jsPDF();
-    const imgWidth = pdf.internal.pageSize.getWidth();
-    const imgHeight = pdf.internal.pageSize.getHeight();
-    pdf.addImage(resumeImg, "PNG", 0, 0, 0, 0);
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgProps = pdf.getImageProperties(resumeImg);
+    const ratio = imgProps.height / imgProps.width;
+
+    const pageHeight = pageWidth * ratio;
+    pdf.addImage(resumeImg, "JPEG", 0, 0, pageWidth, pageHeight);
 
     const downloadDetails = {
       timeStamp, resumeId: id, resumeImg
     }
 
     const result = await downloadResumeAPI(downloadDetails);
-    console.log(result);    
+    // console.log(result, resumeImg);
 
     if (result.status == 201) {
       pdf.save(`${resumeData?.fullName}.pdf`)
-    }    
+    }
   }
 
   return (
@@ -65,7 +73,10 @@ function viewResume() {
         <button onClick={downloadResume}>
           <FaFileDownload className='text-blue-500 cursor-pointer' />
         </button>
-        <Edit />
+        <Edit
+          resumeData = {resumeData}
+          setResumeData = {setResumeData} 
+        />
         <IoMdRefresh className='text-red-500' />
         <FaBackward className='text-green-500' />
       </article>

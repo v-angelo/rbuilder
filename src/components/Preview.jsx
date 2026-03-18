@@ -3,7 +3,7 @@ import { Divider, Button } from '@mui/material';
 
 function Preview({ resumeData }) {
   return (
-    <section className='px-10'>
+    <section className='p-10'>
       <h2 className='text-3xl font-medium mb-3'>{resumeData?.fullName}</h2>
       <h4 className='my-2'>Phone: {resumeData?.phone}</h4>
       <h4 className='my-2'>Email: {resumeData?.email}</h4>
@@ -21,7 +21,7 @@ function Preview({ resumeData }) {
       <h3 className='text-2xl font-medium my-3'>Technical Skills</h3>
       {
         resumeData?.skills?.map((item, index )=> (
-          <Button key={index} sx={{margin: "5px 3px", color: "black", borderColor: "black" }} variant='outlined'>{item}</Button>
+          <Button key={index} sx={{margin: "5px 3px", color: "black", borderColor: "gray" }} variant='outlined'>{item}</Button>
         ))
       }
 
