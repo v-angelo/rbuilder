@@ -30,7 +30,7 @@ function viewResume() {
     const previewTag = previewRef.current;
     const canvas = await html2canvas(previewTag);
     const imgUrl = canvas.toDataURL('image/jpeg', 0.7);
-    console.log(imgUrl);
+    // console.log(imgUrl);
 
     generatePDF(imgUrl);
 
